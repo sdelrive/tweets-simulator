@@ -14,7 +14,8 @@ import FormSendTweet from "../FormSendTweet/FormSendTweet";
 // import key del ls
 import { TWEETS_STORAGE } from "../../utils/constants";
 
-export default function SendTweet() {
+export default function SendTweet(props) {
+  const { setToastProps, allTweets } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const openModal = () => {
     setIsOpenModal(true);
@@ -27,17 +28,20 @@ export default function SendTweet() {
     e.preventDefault();
     const { name, tweet } = formValue;
     let allTweetsArray = [];
+    if (allTweets) {
+      allTweetsArray = allTweets;
+    }
 
     if (!name || !tweet) {
-      console.log("El formulario esta vacio");
+      setToastProps({ open: true, text: "El formulario esta vacio" });
     } else {
       formValue.time = moment();
       allTweetsArray.push(formValue);
       localStorage.setItem(TWEETS_STORAGE, JSON.stringify(allTweetsArray));
-      console.log("Enviado correctamente");
+      setToastProps({ open: true, text: "El twit fue enviado" });
       closeModal();
     }
-    allTweetsArray = [];
+    allTweetsArray = allTweets;
   };
   return (
     <div className="send-tweet">
